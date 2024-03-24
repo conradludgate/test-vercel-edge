@@ -2,13 +2,15 @@ import { neon, neonConfig } from '@neondatabase/serverless_0_8';
 import { geolocation } from '@vercel/edge';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
-neonConfig.fetchFunction = async (input: RequestInfo | URL, init?: RequestInit | undefined) => {
+async function myfetch(input: RequestInfo | URL, init?: RequestInit | undefined) {
     const startedAt = new Date();
     const res = await fetch(input, init);
     const finishedAt = new Date();
     console.log({ startedAt, finishedAt, ms: finishedAt.getTime() - startedAt.getTime() })
     return res;
-};
+}
+
+neonConfig.fetchFunction = myfetch;
 
 export const config = {
     runtime: 'edge',
@@ -58,6 +60,11 @@ export default async (request: NextRequest, event: NextFetchEvent) => {
 
         let queries: CommonQuery[] = [];
         const sql = neon(slRequest.connstr, { fullResults: true });
+
+        // establish connection baseline latency
+        for (let i = 0; i < 10; i += 1) {
+            await myfetch("https://api.eu-central-1.aws.neon.tech/sql", {method: "OPTIONS"});
+        }
 
         for (const slQuery of slRequest.queries) {
             let params = (slQuery.params == null) ? undefined : slQuery.params;
