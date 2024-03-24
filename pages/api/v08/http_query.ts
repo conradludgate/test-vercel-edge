@@ -1,9 +1,17 @@
-import { neon } from '@neondatabase/serverless_0_8';
+import { neon, neonConfig } from '@neondatabase/serverless_0_8';
 import { geolocation } from '@vercel/edge';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
+neonConfig.fetchFunction = async (input: RequestInfo | URL, init?: RequestInit | undefined) => {
+    const startedAt = new Date();
+    const res = await fetch(input, init);
+    const finishedAt = new Date();
+    console.log({ startedAt, finishedAt, ms: finishedAt.getTime() - startedAt.getTime() })
+    return res;
+};
+
 export const config = {
-  runtime: 'edge',
+    runtime: 'edge',
 };
 
 const driverName = "@neondatabase/serverless@0.8.1";
