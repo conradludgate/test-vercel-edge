@@ -53,7 +53,7 @@ export default async (request: NextRequest, event: NextFetchEvent) => {
 
         for (const slQuery of slRequest.queries) {
             let params = (slQuery.params == null) ? undefined : slQuery.params;
-            const startedAt = new Date();
+            let startedAt = undefined;
             let finishedAt = undefined;
             let response = "";
             let error = "";
@@ -61,12 +61,15 @@ export default async (request: NextRequest, event: NextFetchEvent) => {
 
             try {
                 console.log('running query ' + slQuery.query + ' with connstr ' + slRequest.connstr);
+
+                startedAt = new Date();
                 const rawResult = await Promise.race([sql(slQuery.query, params), globalTimeout]);
+                finishedAt = new Date();
+
                 if (!rawResult) {
                     throw new Error("global 15s timeout exceeded, edge function was invoked at " + funcBootedAt.toISOString());
                 }
 
-                finishedAt = new Date();
                 const res = {
                     rows: rawResult.rows,
                     rowCount: rawResult.rowCount,
