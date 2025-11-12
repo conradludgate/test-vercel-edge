@@ -11,7 +11,7 @@ export const config = {
 };
 
 async function check(): Promise<any[]> {
-    neonConfig.webSocketConstructor = ws
+    // neonConfig.webSocketConstructor = ws
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
     return (await client.query('select pg_sleep(55), 1')).rows;
