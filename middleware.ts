@@ -10,14 +10,14 @@ export const config = {
     matcher: ['/middleware/:path*'],
 };
 
-async function check(): Promise<any[]> {
+async function check() {
     // neonConfig.webSocketConstructor = ws
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
-    return (await client.query('select pg_sleep(55), 1')).rows;
+    console.table(await client.query('select pg_sleep(55), 1'));
 }
 
 export default function middleware(request: NextRequest, context: NextFetchEvent) {
-    const result = context.waitUntil(check());
-    return NextResponse.json(result)
+    context.waitUntil(check());
+    return NextResponse.json({})
 }
