@@ -6,16 +6,16 @@ import ws from 'ws';
 
 export const config = {
     runtime: 'experimental-edge',
-    region: ["cle1"],
+    regions: ["cle1"],
     matcher: ['/middleware/:path*'],
 };
 
 neonConfig.webSocketConstructor = ws
 
-async function check() {
+async function check(): Promise<any[]> {
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
-    return await client.query('select pg_sleep(100), 1');
+    return (await client.query('select pg_sleep(100), 1')).rows;
 }
 
 export default function middleware(request: NextRequest, context: NextFetchEvent) {
