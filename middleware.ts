@@ -2,16 +2,18 @@ import { NextResponse } from 'next/server';
 import type { NextFetchEvent, NextRequest } from 'next/server';
 
 import { neonConfig, Client } from '@neondatabase/serverless_1_0';
-import ws from 'ws';
+// import ws from 'ws';
+import { WebSocket } from '@edge-runtime/primitives';
 
 export const config = {
     runtime: 'experimental-edge',
+    // runtime: 'nodejs',
     regions: ["cle1"],
     matcher: ['/middleware/:path*'],
 };
 
 async function check() {
-    // neonConfig.webSocketConstructor = ws
+    neonConfig.webSocketConstructor = WebSocket;
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
     console.table(await client.query('select pg_sleep(50), 1'));
