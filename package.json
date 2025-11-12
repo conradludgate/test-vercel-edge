@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@edge-runtime/node-utils": "^4.0.0",
     "@edge-runtime/primitives": "^6.0.0",
     "@neondatabase/serverless": "^0.4.15",
     "@neondatabase/serverless_0_7": "npm:@neondatabase/serverless@^0.7.2",
@@ -31,6 +32,7 @@
     "ws": "8"
   },
   "devDependencies": {
+    "@edge-runtime/types": "^4.0.0",
     "@types/ws": "^8.18.1"
   }
 }
