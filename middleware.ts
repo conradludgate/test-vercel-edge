@@ -10,9 +10,8 @@ export const config = {
     matcher: ['/middleware/:path*'],
 };
 
-neonConfig.webSocketConstructor = ws
-
 async function check(): Promise<any[]> {
+    neonConfig.webSocketConstructor = ws
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
     return (await client.query('select pg_sleep(55), 1')).rows;
