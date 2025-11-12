@@ -5,7 +5,9 @@ import { neonConfig, Client } from '@neondatabase/serverless';
 import ws from 'ws';
 
 export const config = {
-    runtime: 'experimental-edge',
+    runtime: 'edge',
+    region: ["cle1"],
+    matcher: ['/middleware/:path*'],
 };
 
 neonConfig.webSocketConstructor = ws
@@ -13,11 +15,10 @@ neonConfig.webSocketConstructor = ws
 async function check() {
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
-    const result = await client.query('select pg_sleep(100), 1');
-    console.table(result);
+    return await client.query('select pg_sleep(100), 1');
 }
 
 export default function middleware(request: NextRequest, context: NextFetchEvent) {
-    context.waitUntil(check());
-    return NextResponse.next()
+    const result = context.waitUntil(check());
+    return NextResponse.json(result)
 }
