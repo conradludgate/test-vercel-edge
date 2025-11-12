@@ -5,7 +5,7 @@ import { neonConfig, Client } from '@neondatabase/serverless';
 import ws from 'ws';
 
 export const config = {
-    runtime: 'edge',
+    runtime: 'experimental-edge',
 };
 
 neonConfig.webSocketConstructor = ws
