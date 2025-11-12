@@ -14,7 +14,7 @@ async function check() {
     // neonConfig.webSocketConstructor = ws
     const client = new Client(process.env.DATABASE_URL);
     await client.connect();
-    console.table(await client.query('select pg_sleep(55), 1'));
+    console.table(await client.query('select pg_sleep(50), 1'));
 }
 
 export default function middleware(request: NextRequest, context: NextFetchEvent) {
